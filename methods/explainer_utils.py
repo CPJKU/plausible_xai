@@ -16,7 +16,6 @@ def get_lime_explainer_params(net, mask, device, similarity_function=None):
         'perturbations_per_eval': 16,
         'show_progress': False
     }
-    # print('similarity_function', similarity_function)
     exp_eucl_distance = similarity_function
     if exp_eucl_distance is None:
         exp_eucl_distance = get_exp_kernel_similarity_function('cosine', kernel_width=0.25)
@@ -26,7 +25,6 @@ def get_lime_explainer_params(net, mask, device, similarity_function=None):
 
 def get_explainer(explainer_name, mask, device, net, lime_similarity_function=None):
     """ Returns an explainer and describing arguments. """
-
     if explainer_name != 'lime' and lime_similarity_function is not None:
         raise ValueError('lime_similarity_function can only be set for lime')
 

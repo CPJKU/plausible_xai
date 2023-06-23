@@ -60,7 +60,7 @@ def get_segment_weights(attrs, mask, aggregation=None):
 
 
 def get_attributions_for_segment_weights(mask, segment_weights):
-    """  """
+    """ Gets all attributions for certain segments. """
     assert mask.shape[0] == segment_weights.shape[0] and len(np.unique(mask)) == segment_weights.shape[1]
     attrs = torch.zeros_like(mask, dtype=torch.float32)
     for seg in range(len(np.unique(mask))):
@@ -70,14 +70,9 @@ def get_attributions_for_segment_weights(mask, segment_weights):
 
 
 def prepare_k(k_segments, mask):
-    """  """
+    """ Adapts k based on whether we have absolute values or percentages. """
     k = k_segments
     if isinstance(k_segments, float):
-        # k = []
-        # for m in mask:
-            # k.append(int(len(np.unique(m)) * k_segments))
-            # if k_segments == 1.0:
-            #     print('m', np.unique(m), 'k', k[-1])
         k = [int(len(np.unique(m)) * k_segments) for m in mask]
     if isinstance(k_segments, int):
         k = [k for _ in mask]
@@ -85,7 +80,7 @@ def prepare_k(k_segments, mask):
 
 
 def get_top_segments(segment_weights, k):
-    """  """
+    """ Returns k highest segment-indices based on segment-weights. """
     assert not np.isnan(segment_weights).any(), 'segment_weights cannot have nan values'
     return [seg[-kk:] for kk, seg in zip(k, np.argsort(segment_weights))]
 

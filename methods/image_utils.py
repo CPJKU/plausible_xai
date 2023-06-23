@@ -9,8 +9,8 @@ import torch
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD = [0.229, 0.224, 0.225]
 
-# Method to normalize an image to Imagenet mean and standard deviation
 def transform_imagenet(img):
+    """ Method to normalize an image to Imagenet mean and standard deviation. """
     return transforms.Compose(
         [
             transforms.Resize(256),
@@ -24,6 +24,7 @@ def transform_imagenet(img):
 
 
 def transform_inceptionv3(img):
+    """ Method to normalize an image to Imagenet mean and standard deviation for Inceptionv3 net. """
     return transforms.Compose(
         [
             transforms.Resize(299),
@@ -44,6 +45,7 @@ def unnormalise(x):
 
 
 def get_tensor_from_filename(filename, inception=False):
+    """ Loads image from filename and transforms (incl. normalises) it.  """
     img = Image.open(filename).convert("RGB")
     if not inception:
         return transform_imagenet(img)
@@ -51,19 +53,8 @@ def get_tensor_from_filename(filename, inception=False):
         return transform_inceptionv3(img)
 
 
-def load_image_tensors(class_name, root_path, transform=None):
-    path = os.path.join(root_path, 'tcav_tutorial', class_name)
-    filenames = glob.glob(path + '/*.jpeg')
-
-    tensors = []
-    for filename in filenames:
-        img = Image.open(filename).convert('RGB')
-        tensors.append(transform(img) if transform is not None else img)
-
-    return tensors
-
-
 def image_show(img, pred):
+    """ Plots a given image (and its prediction). """
     normalize01 = lambda x: (x - x.min()) / (x.max() - x.min())
     npimg = img.squeeze().permute(1, 2, 0).detach().numpy()
     plt.imshow(normalize01(npimg))
